@@ -20,8 +20,9 @@ This project demonstrates core Object-Oriented Programming concepts in Python �
 
 ```
 banking-system-oop/
-├── bank_accounts.py   # BankAccount, BalanceException, InterestRewardAcc classes
-├── main.py            # Entry point — creates accounts and runs example transactions
+├── bank_accounts.py    # BankAccount, BalanceException, InterestRewardAcc classes
+├── main.py             # Entry point — creates accounts and runs example transactions
+├── output_files/       # Screenshots of sample program output
 └── README.md
 ```
 
@@ -63,6 +64,20 @@ Jim.getbalance()
 Jim.deposit(100)        # deposits with a 5% bonus
 Jim.transfer(Maryam, 500)
 ```
+
+## Sample Output
+
+**Account creation, deposit, and withdraw (with insufficient balance handling):**
+
+![Withdraw and Deposit Output](output_files/withdraw_deposit_output.png)
+
+**Transfer between accounts:**
+
+![Transfer Output](output_files/transfer_money_output.png)
+
+**InterestRewardAcc — deposit with bonus, then transfer:**
+
+![InterestRewardAcc Output](output_files/Interest_Reward_Acc_class_output.png)
 
 ## Classes
 
