@@ -17,3 +17,8 @@ Jim = InterestRewardAcc(1000,"Jim")
 Jim.getbalance()
 Jim.deposit(100)
 Jim.transfer(Maryam,500)
+
+Fatima = SavingAcc(1000,"Fatima")
+Fatima.getbalance()
+Fatima.deposit(100)
+Fatima.transfer(200,Jim)
