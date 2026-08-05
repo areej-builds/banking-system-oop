@@ -29,3 +29,9 @@ Fatima.getbalance()
 Fatima.deposit(100)
 # Transfer from Fatima to Jim
 Fatima.transfer(Jim,200)
+
+# Test: try to transfer more than Jim's (InterestRewardAcc) balance -> should fail gracefully
+Jim.transfer(Maryam,10000)
+
+# Test: try to transfer more than Fatima's (SavingAcc) balance -> should fail gracefully
+Fatima.transfer(Jim,10000)
