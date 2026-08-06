@@ -1,5 +1,10 @@
-# Custom exception used when an account doesn't have enough balance
-# for a withdrawal or transfer.
+import json
+import os
+
+'''
+Custom exception used when an account doesn't have enough balance
+for a withdrawal or transfer.
+'''
 class BalanceException(Exception):
     pass
 
@@ -21,6 +26,7 @@ class BankAccount:
         self.balance += amount
         print("\nDeposit complete.")
         self.getbalance()
+        self.SavingDataToFile("Deposit",amount)
 
     # Checks whether the account has enough balance for the given amount.
     # Raises BalanceException if not.
@@ -40,6 +46,7 @@ class BankAccount:
             self.balance -= amount
             print("\nWithdraw complete.")
             self.getbalance()
+            self.SavingDataToFile("Withdraw",amount)
         except BalanceException as error:
             print(f"\nWithdraw Interrupted! {error}")
 
@@ -53,11 +60,38 @@ class BankAccount:
             self.withdraw(amount)
             account.deposit(amount)
             print("\nTransfer Complete!")
-            print("\n", "="*30)
-
+            print("\n" +"="*30)
+            self.SavingDataToFile(f"Transfer to {account.name}",amount)
         except BalanceException as error:
             print(f"\nSorry, Transfer Interrupted! {error}")
             print("\n"+ "="*30)
+    '''
+    SavingDataToFile:
+    Records a transaction entry into history.json.
+    Reads any existing history first, appends the new entry, then
+    rewrites the whole file so it stays valid JSON.
+    '''    
+    def SavingDataToFile(self,action,amount):
+        entry = {
+            "Account Name: " : self.name,
+            "Action: " : action,
+            "Amount: " : amount,
+            "Current Balance: " : self.balance,
+        }
+
+        if os.path.exists("history.json") and os.path.getsize("history.json") > 0:
+            with open("history.json","r") as file:
+                history = json.load(file)
+        else:
+            history = []
+
+        history.append(entry)
+
+        with open("history.json","w") as file:
+            json.dump(history,file,indent=4)
+
+
+        
 
 
 # A BankAccount that rewards every deposit with a 5% bonus.
@@ -67,6 +101,7 @@ class InterestRewardAcc(BankAccount):
         self.balance += (amount*1.05)
         print("Deposit complete.")
         self.getbalance()
+        self.SavingDataToFile("Deposit (with bouns)",amount)
 
 
 # An InterestRewardAcc that also charges a flat fee on every withdrawal.
@@ -83,6 +118,9 @@ class SavingAcc(InterestRewardAcc):
             self.balance -= (amount + self.fee)
             print("\nWithdraw complete.")
             self.getbalance()
+            self.SavingDataToFile("Withdraw (with fee)",amount)
 
         except BalanceException as error:
             print(f"\nWithdraw Interrupted! {error}")
+
+    
