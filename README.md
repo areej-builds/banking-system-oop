@@ -16,6 +16,7 @@ This project demonstrates core Object-Oriented Programming concepts in Python �
 - Custom `BalanceException` for handling insufficient-funds errors gracefully
 - `InterestRewardAcc` — a special account type that adds a 5% bonus on every deposit
 - `SavingAcc` — inherits from `InterestRewardAcc`, also charges a flat $5 fee on every withdrawal
+- Transaction logging — every deposit, withdraw, and transfer is automatically recorded in `history.json`
 
 ## Project Structure
 
@@ -23,9 +24,12 @@ This project demonstrates core Object-Oriented Programming concepts in Python �
 banking-system-oop/
 ├── bank_accounts.py    # BankAccount, BalanceException, InterestRewardAcc, SavingAcc classes
 ├── main.py             # Entry point — creates accounts and runs example transactions
+├── history.json         # Auto-generated transaction log (ignored by git)
 ├── output_files/       # Screenshots of sample program output
 └── README.md
 ```
+
+> Note: `history.json` is listed in `.gitignore` since it's generated at runtime and differs per user/run — it isn't tracked in the repo.
 
 ## Requirements
 
@@ -70,6 +74,8 @@ Fatima.getbalance()
 Fatima.deposit(100)     # deposits with a 5% bonus
 Fatima.transfer(Jim, 200)   # withdrawal side also deducts a $5 fee
 ```
+
+> Every deposit, withdraw, and transfer call above also writes an entry to `history.json` in the same folder — so after running this, you'll have a full transaction log saved alongside the console output.
 
 ## Sample Output
 
@@ -165,6 +171,7 @@ Base class representing a standard bank account.
 - `deposit(amount)` — adds funds to the balance
 - `withdraw(amount)` — removes funds, blocked if balance is insufficient
 - `transfer(account, amount)` — withdraws from self and deposits into another `BankAccount` object
+- `SavingDataToFile(action, amount)` — logs each transaction (account, action, amount, resulting balance) to `history.json`
 
 ### `InterestRewardAcc` (inherits from `BankAccount`)
 A reward account that overrides `deposit()` to add a 5% bonus on every deposit — e.g., depositing $100 adds $105 to the balance.
@@ -182,6 +189,7 @@ Custom exception raised when a withdrawal or transfer is attempted with insuffic
 - **Inheritance & Method Overriding** — `InterestRewardAcc` extends `BankAccount`, and `SavingAcc` extends `InterestRewardAcc`, each customizing `deposit()` / `withdraw()`
 - **Custom Exceptions** — `BalanceException` for domain-specific error handling
 - **Method Interaction** — `transfer()` reusing `withdraw()` and `deposit()` internally, and working polymorphically across account types
+- **File Handling** — every transaction is read, appended, and rewritten to `history.json` as valid JSON, giving a persistent record across runs
 
 ## Author
 
