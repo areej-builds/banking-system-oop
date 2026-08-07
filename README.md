@@ -4,11 +4,13 @@ Simple bank account management system in Python using OOP principles.
 
 ## Overview
 
-This project demonstrates core Object-Oriented Programming concepts in Python — encapsulation, inheritance, and custom exception handling — through a simulated banking system. It supports creating accounts, depositing, withdrawing, and transferring funds between accounts, with built-in checks to prevent invalid transactions (e.g., withdrawing more than the available balance). It also includes a specialized account type that rewards deposits with bonus interest.
+This project demonstrates core Object-Oriented Programming concepts in Python — encapsulation, inheritance, and custom exception handling — through a simulated banking system. It supports creating accounts, depositing, withdrawing, and transferring funds between accounts, with built-in checks to prevent invalid transactions (e.g., withdrawing more than the available balance). It also includes specialized account types that reward deposits with bonus interest, and a full interactive CLI menu with PIN-protected transactions and persistent storage.
 
 ## Features
 
-- Create bank accounts with an initial balance and account holder name
+- Interactive CLI menu — create accounts, deposit, withdraw, transfer, check balance, view statements, and compare accounts
+- Create bank accounts with an initial balance, account holder name, and a 4-digit PIN
+- PIN protection — deposits, withdrawals, and transfers require PIN verification before proceeding
 - Check account balance
 - Deposit funds
 - Withdraw funds (with balance validation)
@@ -17,19 +19,22 @@ This project demonstrates core Object-Oriented Programming concepts in Python �
 - `InterestRewardAcc` — a special account type that adds a 5% bonus on every deposit
 - `SavingAcc` — inherits from `InterestRewardAcc`, also charges a flat $5 fee on every withdrawal
 - Transaction logging — every deposit, withdraw, and transfer is automatically recorded in `history.json`
+- Account persistence — all accounts (type, balance, PIN) are saved to `accounts.json` and automatically reloaded the next time the program runs
+- Account statements — view a full transaction history and totals for any account
+- Account comparison — list all accounts sorted from highest to lowest balance
 
 ## Project Structure
 
 ```
 banking-system-oop/
-├── bank_accounts.py    # BankAccount, BalanceException, InterestRewardAcc, SavingAcc classes
-├── main.py             # Entry point — creates accounts and runs example transactions
+├── bank_accounts.py    # BankAccount, BalanceException, InterestRewardAcc, SavingAcc classes + persistence & reporting helpers
+├── main.py             # Entry point — interactive CLI menu wired to all account operations
+├── accounts.json        # Auto-generated account storage (ignored by git)
 ├── history.json         # Auto-generated transaction log (ignored by git)
 ├── output_files/       # Screenshots of sample program output
 └── README.md
 ```
-
-> Note: `history.json` is listed in `.gitignore` since it's generated at runtime and differs per user/run — it isn't tracked in the repo.
+> Note: `accounts.json` and `history.json` are listed in `.gitignore` since they're generated at runtime and differ per user/run — they aren't tracked in the repo.
 
 ## Requirements
 
@@ -38,135 +43,50 @@ banking-system-oop/
 ## How to Run
 
 1. Clone the repository:
-   ```
-   git clone https://github.com/areej-builds/banking-system-oop.git
-   cd banking-system-oop
-   ```
+
+```
+git clone https://github.com/areej-builds/banking-system-oop.git
+cd banking-system-oop
+```
 
 2. Run the main script:
-   ```
-   python main.py
-   ```
-
-## Example Usage
-
-```python
-from bank_accounts import *
-
-Areej = BankAccount(1000, "Areej")
-Maryam = BankAccount(2000, "Maryam")
-
-Areej.getbalance()
-Maryam.deposit(500)
-
-Areej.withdraw(10000)   # fails gracefully — insufficient balance
-Areej.withdraw(100)
-
-Maryam.transfer(Areej, 500)
-
-Jim = InterestRewardAcc(1000, "Jim")
-Jim.getbalance()
-Jim.deposit(100)        # deposits with a 5% bonus
-Jim.transfer(Maryam, 500)
-
-Fatima = SavingAcc(1000, "Fatima")
-Fatima.getbalance()
-Fatima.deposit(100)     # deposits with a 5% bonus
-Fatima.transfer(Jim, 200)   # withdrawal side also deducts a $5 fee
-```
-
-> Every deposit, withdraw, and transfer call above also writes an entry to `history.json` in the same folder — so after running this, you'll have a full transaction log saved alongside the console output.
-
-## Sample Output
 
 ```
-Account 'Areej' created.
- Balance=$1000.00
-
-Account 'Maryam' created.
- Balance=$2000.00
-
-Account 'Areej' has Balance=$1000.00
-
-Deposit complete.
-
-Account 'Maryam' has Balance=$2500.00
-
-Withdraw Interrupted!
-Sorry,Acount 'Areej' has only a balance of $1000.00
-
-Withdraw complete.
-
-Account 'Areej' has Balance=$900.00
-
-==============================
-
-Begining the tranfer...
-
-Withdraw complete.
-
-Account 'Maryam' has Balance=$2000.00
-
-Deposit complete.
-
-Account 'Areej' has Balance=$1400.00
-
-Transfer Complete!
-
- ==============================
-
-Account 'Jim' created.
- Balance=$1000.00
-
-Account 'Jim' has Balance=$1000.00
-Deposit complete.
-
-Account 'Jim' has Balance=$1105.00
-
-==============================
-
-Begining the tranfer...
-
-Withdraw complete.
-
-Account 'Jim' has Balance=$605.00
-
-Deposit complete.
-
-Account 'Maryam' has Balance=$2500.00
-
-Transfer Complete!
-
- ==============================
-
-Account 'Fatima' created.
- Balance=$1000.00
-
-Account 'Fatima' has Balance=$1000.00
-Deposit complete.
-
-Account 'Fatima' has Balance=$1105.00
-
-==============================
-
-Begining the tranfer...
-
-Withdraw complete.
-
-Account 'Fatima' has Balance=$900.00
-Deposit complete.
-
-Account 'Jim' has Balance=$815.00
-
-Transfer Complete!
-
- ==============================
+python main.py
 ```
+
+3. Use the on-screen menu to create accounts and perform transactions. Your accounts and transaction history are saved automatically and will still be there the next time you run the program.
+
+## Menu Options
+
+```
+==============================
+      BANKING SYSTEM MENU
+==============================
+1. Create Account
+2. Deposit
+3. Withdraw
+4. Transfer
+5. Check Balance
+6. Account Statement
+7. Compare Accounts
+8. Exit
+```
+
+- **Create Account** — choose a name, starting balance, PIN, and account type (Regular, InterestRewardAcc, or SavingAcc)
+- **Deposit / Withdraw / Transfer** — require the account's PIN before the transaction is processed
+- **Check Balance** — prints the current balance for an account
+- **Account Statement** — prints every transaction for an account along with total deposited/withdrawn
+- **Compare Accounts** — lists all accounts sorted by balance, highest to lowest
+- **Exit** — saves all accounts to `accounts.json` before quitting
 
 ## Classes
 
 ### `BankAccount`
+
 Base class representing a standard bank account.
+
+- `check_pin(entered_pin)` — verifies the entered PIN matches the account's PIN
 - `getbalance()` — prints the current balance
 - `deposit(amount)` — adds funds to the balance
 - `withdraw(amount)` — removes funds, blocked if balance is insufficient
@@ -174,22 +94,32 @@ Base class representing a standard bank account.
 - `SavingDataToFile(action, amount)` — logs each transaction (account, action, amount, resulting balance) to `history.json`
 
 ### `InterestRewardAcc` (inherits from `BankAccount`)
+
 A reward account that overrides `deposit()` to add a 5% bonus on every deposit — e.g., depositing $100 adds $105 to the balance.
 
 ### `SavingAcc` (inherits from `InterestRewardAcc`)
+
 Keeps the 5% deposit bonus and additionally charges a flat $5 fee on every withdrawal — overrides `withdraw()` to deduct the withdrawal amount plus the fee.
 
 ### `BalanceException`
+
 Custom exception raised when a withdrawal or transfer is attempted with insufficient funds. Caught internally so the program doesn't crash — it prints a friendly error message instead.
+
+## Persistence
+
+- `save_accounts()` — writes every account's type, balance, and PIN to `accounts.json`
+- `load_accounts()` — reads `accounts.json` on startup and rebuilds each account object with the correct class (`BankAccount`, `InterestRewardAcc`, or `SavingAcc`)
+- Accounts are saved automatically after every operation and again on exit, so no data is lost between runs
 
 ## Concepts Demonstrated
 
 - **Classes & Objects** — modeling real-world entities (bank accounts) as Python objects
-- **Encapsulation** — balance and account logic bundled within the `BankAccount` class
+- **Encapsulation** — balance, PIN, and account logic bundled within the `BankAccount` class
 - **Inheritance & Method Overriding** — `InterestRewardAcc` extends `BankAccount`, and `SavingAcc` extends `InterestRewardAcc`, each customizing `deposit()` / `withdraw()`
 - **Custom Exceptions** — `BalanceException` for domain-specific error handling
 - **Method Interaction** — `transfer()` reusing `withdraw()` and `deposit()` internally, and working polymorphically across account types
-- **File Handling** — every transaction is read, appended, and rewritten to `history.json` as valid JSON, giving a persistent record across runs
+- **File Handling** — accounts and transactions are read, appended/rebuilt, and rewritten as valid JSON, giving persistent state across runs
+- **CLI Design** — a menu-driven interface separating user interaction (`main.py`) from business logic (`bank_accounts.py`)
 
 ## Author
 
